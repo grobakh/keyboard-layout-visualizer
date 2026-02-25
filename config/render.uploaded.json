@@ -1,0 +1,25 @@
+{
+  "vial_config_path": "../inputs/25 v3.vil",
+  "template_image_path": "../assets/layout.png",
+  "layout_config_path": "layout.corne.853x309.json",
+  "output_dir": "../output",
+  "output_filename": "corne-layout-from-upload.png",
+  "solo": false,
+  "default_style": {
+    "font_size": 11,
+    "font_path": null,
+    "stroke_width": 2,
+    "stroke_color": "#0b0f14"
+  },
+  "layers": [
+    {"number": 0, "position": "center", "color": "#f8fafc", "font_size": 14},
+    {"number": 1, "position": "top-left", "color": "#bae6fd", "font_size": 9},
+    {"number": 2, "position": "top", "color": "#bbf7d0", "font_size": 9},
+    {"number": 3, "position": "top-right", "color": "#fde68a", "font_size": 9},
+    {"number": 4, "position": "left", "color": "#fecdd3", "font_size": 9},
+    {"number": 5, "position": "right", "color": "#ddd6fe", "font_size": 9},
+    {"number": 6, "position": "bottom-left", "color": "#a7f3d0", "font_size": 9},
+    {"number": 7, "position": "bottom", "color": "#fbcfe8", "font_size": 9},
+    {"number": 8, "position": "bottom-right", "color": "#e9d5ff", "font_size": 9}
+  ]
+}

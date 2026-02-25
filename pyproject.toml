@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "corne-layout-generator"
+version = "0.1.0"
+description = "CLI tool to render Corne keyboard layers from Vial config onto a template image"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "Pillow>=10.0.0"
+]
+
+[project.scripts]
+corne-layout-gen = "corne_layout_generator.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["corne_layout_generator*"]

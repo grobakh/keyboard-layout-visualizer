@@ -1,0 +1,16 @@
+stages:
+  - test
+
+test:render:
+  stage: test
+  image: python:3.12
+  before_script:
+    - python -m pip install --upgrade pip
+    - pip install -e .
+  script:
+    - python -m compileall corne_layout_generator scripts/generate_layout.py
+    - python scripts/generate_layout.py --config config/render.example.json
+  artifacts:
+    when: always
+    paths:
+      - output/
