@@ -115,9 +115,9 @@ def _normalize_key_label(value: Any) -> str:
         return ""
 
     if text in {"KC_TRNS", "_______", "TRNS"}:
-        return "TRNS"
+        return ""
     if text in {"XXXXXXX", "KC_NO", "NO"}:
-        return "NO"
+        return ""
 
     if text.startswith("KC_"):
         text = text[3:]
@@ -189,6 +189,21 @@ def _draw_text_in_key(
     )
 
 
+def _draw_key_rectangles(
+    draw: ImageDraw.ImageDraw,
+    key_rects: list[KeyRect],
+    color: str,
+    width: int,
+) -> None:
+    outline_width = max(1, width)
+    for rect in key_rects:
+        draw.rectangle(
+            (rect.x, rect.y, rect.x + rect.w, rect.y + rect.h),
+            outline=color,
+            width=outline_width,
+        )
+
+
 def _parse_layers(config: dict[str, Any]) -> list[LayerStyle]:
     raw_layers = config.get("layers")
     if not isinstance(raw_layers, list) or not raw_layers:
@@ -214,6 +229,11 @@ def _parse_layers(config: dict[str, Any]) -> list[LayerStyle]:
     if not isinstance(styles_from_map, dict):
         raise ValueError("layer_styles must be an object if present")
 
+    raw_muted = config.get("mute_layers", [])
+    if not isinstance(raw_muted, list):
+        raise ValueError("mute_layers must be an array if present")
+    muted_layer_numbers = {int(layer) for layer in raw_muted}
+
     parsed: list[LayerStyle] = []
 
     for i, entry in enumerate(raw_layers):
@@ -231,6 +251,9 @@ def _parse_layers(config: dict[str, Any]) -> list[LayerStyle]:
             raise ValueError("layers entries must be either integers or objects")
 
         style_obj = {**defaults, **entry_style}
+        is_muted = bool(style_obj.get("mute", False)) or (layer_number in muted_layer_numbers)
+        if is_muted:
+            continue
 
         position = str(style_obj.get("position", "")).strip()
         if not position:
@@ -263,6 +286,9 @@ def _parse_layers(config: dict[str, Any]) -> list[LayerStyle]:
                 stroke_width=stroke_width,
             )
         )
+
+    if not parsed:
+        raise ValueError("No active layers to render. Check layers/mute settings.")
 
     return parsed
 
@@ -350,10 +376,23 @@ def render_from_config(config_path: Path) -> Path:
     layout_json = _load_json(layout_path)
 
     img = Image.open(template_path).convert("RGBA")
+    image_scale = float(config.get("image_scale", 1.0))
+    if image_scale <= 0:
+        raise ValueError("image_scale must be greater than 0")
+    if image_scale != 1.0:
+        scaled_w = max(1, int(round(img.width * image_scale)))
+        scaled_h = max(1, int(round(img.height * image_scale)))
+        img = img.resize((scaled_w, scaled_h), Image.Resampling.LANCZOS)
+
     draw = ImageDraw.Draw(img)
 
     key_rects = _parse_layout(layout_json, image_w=img.width, image_h=img.height)
     vial_layers = _normalize_vial_layers(vial_json)
+
+    if bool(config.get("draw_key_rect", False)):
+        key_rect_color = str(config.get("key_rect_color", "#ffffff"))
+        key_rect_width = int(config.get("key_rect_width", 1))
+        _draw_key_rectangles(draw, key_rects, color=key_rect_color, width=key_rect_width)
 
     for rect in key_rects:
         for layer in active_layers:

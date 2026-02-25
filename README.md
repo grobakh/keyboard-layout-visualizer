@@ -50,9 +50,11 @@ Then edit these fields in `config/render.local.json`:
 - `vial_config_path`
 - `template_image_path`
 - `layout_config_path`
+- `image_scale` (for example `2.0` to render at 2x size)
 - `output_dir`
 - `layers`
 - `solo`
+- `draw_key_rect` (draw key outlines from layout `x/y/w/h`)
 
 ## Run
 
@@ -90,6 +92,15 @@ You can also define layers as numbers, with optional per-layer styles in `layer_
 ```
 
 `default_style` applies to all layers unless overridden.
+
+Key outline options:
+- `draw_key_rect`: boolean (default `false`)
+- `key_rect_color`: outline color (default `#ffffff`)
+- `key_rect_width`: outline stroke width (default `1`)
+
+Image scaling:
+- `image_scale`: multiplies template size before drawing (default `1.0`).
+- Layout coordinates are adjusted automatically because `x/y/w/h` are mapped to the scaled image size.
 
 ## Run with uploaded files in this workspace
 

@@ -2,8 +2,12 @@
   "vial_config_path": "../inputs/vial.sample.json",
   "template_image_path": "../assets/corne-empty.jpg",
   "layout_config_path": "layout.corne.json",
+  "image_scale": 1.0,
   "output_dir": "../output",
   "output_filename": "corne-layout.png",
+  "draw_key_rect": false,
+  "key_rect_color": "#ffffff",
+  "key_rect_width": 1,
   "solo": false,
   "default_style": {
     "font_size": 14,
